@@ -1,0 +1,21 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Borel-Regular.ttf",
+      "sha1": "93af82eec3087358e36d188076acee45492dad6a"
+    },
+    {
+      "path": "assets/fonts/IBMPlexMono-BoldItalic.ttf",
+      "sha1": "e8942ab075de83fc8998e85b5de9e2cc54dfc774"
+    },
+    {
+      "path": "assets/fonts/Roboto-Regular.ttf",
+      "sha1": "56c5c0d38bde4c1f1549dda43db37b09c608aad3"
+    },
+    {
+      "path": "assets/fonts/VinaSans-Regular.ttf",
+      "sha1": "3badc1a710a8d7f0af761dd6bb34ad35e02ed214"
+    }
+  ]
+}
