@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert, } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import CustomInput from '../../common/customCards/CustomInput';
 import { useNavigation } from '@react-navigation/native';
@@ -15,7 +15,7 @@ const SignIn = (props) => {
 
     const [details, setDetails] = useState({
         email: '',
-        password: '123456',
+        password: '',
         errPassword: 'false',
         errEmail: 'false',
     })
@@ -44,7 +44,11 @@ const SignIn = (props) => {
 
     useEffect(() => {
 
-        passwordValidation(details.password);
+        if (details.password) {
+            passwordValidation(details.password);
+        }
+
+
     }, [details.password])
 
 
@@ -73,7 +77,18 @@ const SignIn = (props) => {
             })
             .catch((err) => {
                 setVisibleLoad(false);
-                console.warn("Something went wrong", err);
+                Alert.alert(
+                    'Wrong!',
+                    'Check email/password.',
+                    [
+                      {
+                        text: 'Cancel',
+                        style: 'cancel',
+                      },
+                    ],
+                  );
+                
+                console.log("Something went wrong", err);
             })
     }
 
@@ -153,7 +168,7 @@ const SignIn = (props) => {
                     })
                 }} />
                 {details.errPassword == 'true' ? <Text style={{ fontSize: 16, marginBottom: details.errPassword == 'true' ? 45 : null, color: 'red', marginTop: 5, marginLeft: 25 }}>Password should be at least 6 characters..</Text> : null}
-                <TouchableOpacity disabled={disability ? false : true} style={{ width: '90%', height: 65, backgroundColor: disability ?  '#1e0094' : '#DEDAEF', justifyContent: 'center', alignItems: 'center', borderRadius: 30, marginLeft: 20, marginTop: 65 }} onPress={() => { signIn() }}>
+                <TouchableOpacity disabled={disability ? false : true} style={{ width: '90%', height: 65, backgroundColor: disability ? '#1e0094' : '#DEDAEF', justifyContent: 'center', alignItems: 'center', borderRadius: 30, marginLeft: 20, marginTop: 65 }} onPress={() => { signIn() }}>
                     <Text style={{ fontSize: 20, fontFamily: 'Roboto-Regular', fontWeight: '400', lineHeight: 21.09, color: '#fff' }}>Get Started</Text>
                 </TouchableOpacity>
 

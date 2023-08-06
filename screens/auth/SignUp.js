@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, ToastAndroid, KeyboardAvoidingView, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, ToastAndroid, KeyboardAvoidingView, ScrollView, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CustomInput from '../../common/customCards/CustomInput';
 import firestore from '@react-native-firebase/firestore';
@@ -9,7 +9,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 const SignUp = () => {
     const [details, setDetails] = useState({
-        
+
         userName: '',
         email: '',
         password: '123456',
@@ -18,18 +18,18 @@ const SignUp = () => {
         errRetypePassword: 'false',
         errUserNme: 'false',
         errEmail: 'false',
-        
+
     })
     const [user, setUser] = useState();
     const [initializing, setInitializing] = useState(true);
     const [disability, setDisability] = useState(false);
     const [visibleLoad, setVisibleLoad] = useState(false);
-   
+
 
     const navigation = useNavigation();
 
     function onAuthStateChanged(user) {
-       
+
 
         setUser(user);
         if (initializing) setInitializing(false);
@@ -63,13 +63,13 @@ const SignUp = () => {
 
 
     useEffect(() => {
-       
+
         console.log(details.userName.length);
         if (details.errEmail == 'allowed' && details.errUserNme == 'allowed' && details.errPassword == 'allowed' && details.errRetypePassword == 'allowed' && details.userName.length > 0 && details.email.length > 0 && details.password.length > 0 && details.retypePassword.length > 0) {
-           
+
             setDisability(true);
         } else {
-           
+
             setDisability(false);
         }
 
@@ -88,34 +88,34 @@ const SignUp = () => {
                 ...details,
                 errPassword: 'true'
             })
-            
+
         } else {
             console.log("Valid");
             setDetails({
                 ...details,
                 errPassword: 'allowed'
             })
-            
+
         }
 
     }
 
 
     const retypePasswordValidation = (retypePassword) => {
-       
+
         if (!(details.password == retypePassword)) {
             setDetails({
                 ...details,
                 errRetypePassword: 'true'
             })
-            
+
         }
         else {
             setDetails({
                 ...details,
                 errRetypePassword: 'allowed'
             })
-           
+
         }
 
     }
@@ -124,14 +124,14 @@ const SignUp = () => {
     const usrNmeValid = (usrnme) => {
 
         console.log('usrNmeValid');
-        
+
         if (details.userName.length == 0) {
             console.log("Not Valid");
             setDetails({
                 ...details,
                 errUserNme: 'true'
             })
-            
+
         }
         else {
             console.log("Valid");
@@ -139,7 +139,7 @@ const SignUp = () => {
                 ...details,
                 errUserNme: 'allowed'
             })
-           
+
         }
 
     }
@@ -148,20 +148,20 @@ const SignUp = () => {
         let re = /\S+@\S+\.\S+/;
         let regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
-        
+
         if (re.test(emailPr) || regex.test(emailPr)) {
             setDetails({
                 ...details,
                 errEmail: 'allowed'
             })
-          
+
             console.log("Valid");
         } else {
             setDetails({
                 ...details,
                 errEmail: 'true'
             })
-           
+
             console.log("Not Valid");
         }
     };
@@ -172,7 +172,7 @@ const SignUp = () => {
         auth().createUserWithEmailAndPassword(details.email, details.password)
             .then(() => {
                 setVisibleLoad(false);
-                
+
                 firestore().collection("users")
                     .doc(auth().currentUser.uid)
                     .set({
@@ -189,7 +189,16 @@ const SignUp = () => {
             })
             .catch((e) => {
                 setVisibleLoad(false);
-                ToastAndroid.show('Something went wrong...', ToastAndroid.LONG);
+                Alert.alert(
+                    'Wrong!',
+                    'Check email/password.',
+                    [
+                        {
+                            text: 'Cancel',
+                            style: 'cancel',
+                        },
+                    ],
+                );
                 console.log('Error in Authentication Singnup Screen', e);
 
             })
@@ -215,7 +224,7 @@ const SignUp = () => {
                             ...details,
                             userName: txt
                         })
-                        
+
                     }} />
                     {details.errUserNme == 'true' ? <Text style={{ fontSize: 16, marginTop: 5, color: 'red', marginLeft: 25, }}>Name must be present..</Text> : null}
 
@@ -243,12 +252,12 @@ const SignUp = () => {
                     }} />
                     {details.errRetypePassword == 'true' ? <Text style={{ fontSize: 16, marginBottom: details.errRetypePassword == 'true' ? 45 : null, color: 'red', marginTop: 5, marginLeft: 25 }}>Password not correct or mismatching..</Text> : null}
 
-                    <TouchableOpacity style={{ width: '90%', height: 65, backgroundColor: disability ?  '#1e0094' : '#DEDAEF', justifyContent: 'center', alignItems: 'center', borderRadius: 30, marginLeft: 20, marginTop: 65, marginBottom: 10 }} onPress={() => {
+                    <TouchableOpacity style={{ width: '90%', height: 65, backgroundColor: disability ? '#1e0094' : '#DEDAEF', justifyContent: 'center', alignItems: 'center', borderRadius: 30, marginLeft: 20, marginTop: 65, marginBottom: 10 }} onPress={() => {
                         onRegister()
                     }} disabled={disability ? false : true}>
                         <Text style={{ fontSize: 20, fontFamily: 'Roboto-Regular', fontWeight: '400', lineHeight: 21.09, color: '#fff' }}>Get Started</Text>
                     </TouchableOpacity>
-                    
+
                     <Spinner
                         visible={visibleLoad}
                         textContent={'Loading...'}
